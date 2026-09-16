@@ -1,6 +1,6 @@
 [package]
 name = "evidence-protocol"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 license = "MIT"
 description = "Evidence Protocol: public wire contracts (inquiry, grant, artifact, plan, receipt, answer, capability .v0) for the CMD+RVL Evidence Machine. Types + JSON Schemas + fixtures. Minimal by design."

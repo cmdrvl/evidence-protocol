@@ -5,9 +5,10 @@ their JSON Schemas, and fixtures. Defined once, here, so that the private
 runtime can implement them without redefining them and the rules layer can
 check conformance against them.
 
-Status: **v0.1.0 prepared.** `inquiry.v0` and `grant.v0` now carry the
-Milestone 1 N-PORT identity-closure fields, schemas, and fixtures. Remaining
-contract fields land only as their consumers land.
+Status: **v0.2.0 prepared for coordinator review.** `inquiry.v0`,
+`grant.v0`, `artifact.v0`, `plan.v0`, and `plan_patch.v0` now carry the
+Milestone 1 consumer-backed fields, schemas, and fixtures. Remaining contract
+fields land only as their consumers land.
 
 ## The three-layer split
 
@@ -62,7 +63,7 @@ historical instrument identity closure over N-PORT-P holdings.
 
 ```toml
 [dependencies]
-evidence-protocol = { git = "https://github.com/cmdrvl/evidence-protocol", tag = "v0.1.0" }
+evidence-protocol = { git = "https://github.com/cmdrvl/evidence-protocol", tag = "v0.2.0" }
 ```
 
 ```rust

@@ -1,0 +1,567 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "edges": {
+      "items": {
+        "$ref": "#/$defs/planEdge"
+      },
+      "type": "array"
+    },
+    "expected_unknowns": {
+      "items": {
+        "$ref": "#/$defs/expectedUnknown"
+      },
+      "type": "array"
+    },
+    "nodes": {
+      "items": {
+        "$ref": "#/$defs/planNode"
+      },
+      "type": "array"
+    },
+    "refs": {
+      "$ref": "#/$defs/planRefs"
+    },
+    "schema": {
+      "const": "plan.v0"
+    },
+    "universe": {
+      "$ref": "#/$defs/planUniverse"
+    }
+  },
+  "required": [
+    "edges",
+    "expected_unknowns",
+    "nodes",
+    "refs",
+    "schema",
+    "universe"
+  ],
+  "type": "object",
+  "$defs": {
+    "artifactRef": {
+      "pattern": "^artifact:blake3:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "blake3": {
+      "pattern": "^blake3:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "budget": {
+      "additionalProperties": false,
+      "properties": {
+        "bytes": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "cost_units": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "human_reviews": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "model_tokens": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "source_calls": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "bytes",
+        "cost_units",
+        "human_reviews",
+        "model_tokens",
+        "source_calls"
+      ],
+      "type": "object"
+    },
+    "cachePolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "enum": [
+            "no_reuse",
+            "reuse_allowed"
+          ]
+        }
+      },
+      "required": [
+        "mode"
+      ],
+      "type": "object"
+    },
+    "connectorAuthority": {
+      "additionalProperties": false,
+      "properties": {
+        "operations": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "provider": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "operations",
+        "provider"
+      ],
+      "type": "object"
+    },
+    "consequenceAction": {
+      "enum": [
+        "abort_plan",
+        "mark_unknown"
+      ]
+    },
+    "expectedUnknown": {
+      "additionalProperties": false,
+      "properties": {
+        "class": {
+          "type": "string"
+        },
+        "disposition": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "class",
+        "disposition",
+        "reason"
+      ],
+      "type": "object"
+    },
+    "modelContext": {
+      "const": "metadata_only"
+    },
+    "nodeAuthority": {
+      "additionalProperties": false,
+      "properties": {
+        "budget": {
+          "$ref": "#/$defs/budget"
+        },
+        "connectors": {
+          "items": {
+            "$ref": "#/$defs/connectorAuthority"
+          },
+          "type": "array"
+        },
+        "model_context": {
+          "$ref": "#/$defs/modelContext"
+        },
+        "mutations": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "budget",
+        "connectors",
+        "model_context",
+        "mutations"
+      ],
+      "type": "object"
+    },
+    "nodeConsequence": {
+      "additionalProperties": false,
+      "properties": {
+        "on_cancel": {
+          "$ref": "#/$defs/consequenceAction"
+        },
+        "on_empty": {
+          "$ref": "#/$defs/consequenceAction"
+        },
+        "on_error": {
+          "$ref": "#/$defs/consequenceAction"
+        },
+        "on_refusal": {
+          "$ref": "#/$defs/consequenceAction"
+        }
+      },
+      "required": [
+        "on_cancel",
+        "on_empty",
+        "on_error",
+        "on_refusal"
+      ],
+      "type": "object"
+    },
+    "nodeParams": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "warehouse_read"
+            },
+            "read_spec": {
+              "$ref": "#/$defs/warehouseReadSpec"
+            }
+          },
+          "required": [
+            "kind",
+            "read_spec"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "operator"
+            },
+            "parameters": {
+              "items": {
+                "$ref": "#/$defs/parameter"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "kind",
+            "parameters"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "normalizationRule": {
+      "additionalProperties": false,
+      "properties": {
+        "column": {
+          "type": "string"
+        },
+        "placeholder_values": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "to": {
+          "const": "null"
+        }
+      },
+      "required": [
+        "column",
+        "placeholder_values",
+        "to"
+      ],
+      "type": "object"
+    },
+    "operatorRef": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {
+          "$ref": "#/$defs/blake3"
+        },
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "digest",
+        "id",
+        "version"
+      ],
+      "type": "object"
+    },
+    "parameter": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/scalarValue"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "type": "object"
+    },
+    "planEdge": {
+      "additionalProperties": false,
+      "properties": {
+        "from_node": {
+          "type": "string"
+        },
+        "to_node": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "from_node",
+        "to_node"
+      ],
+      "type": "object"
+    },
+    "planNode": {
+      "additionalProperties": false,
+      "properties": {
+        "authority": {
+          "$ref": "#/$defs/nodeAuthority"
+        },
+        "cache": {
+          "$ref": "#/$defs/cachePolicy"
+        },
+        "completion": {
+          "type": "string"
+        },
+        "consequence": {
+          "$ref": "#/$defs/nodeConsequence"
+        },
+        "covers": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "idempotency_key": {
+          "$ref": "#/$defs/blake3"
+        },
+        "inputs": {
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "type": "array"
+        },
+        "node_id": {
+          "type": "string"
+        },
+        "obligation": {
+          "type": "string"
+        },
+        "operator": {
+          "$ref": "#/$defs/operatorRef"
+        },
+        "params": {
+          "$ref": "#/$defs/nodeParams"
+        },
+        "retry": {
+          "$ref": "#/$defs/retryPolicy"
+        },
+        "timeout_seconds": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "authority",
+        "cache",
+        "completion",
+        "consequence",
+        "covers",
+        "idempotency_key",
+        "inputs",
+        "node_id",
+        "obligation",
+        "operator",
+        "params",
+        "retry",
+        "timeout_seconds"
+      ],
+      "type": "object"
+    },
+    "planRefs": {
+      "additionalProperties": false,
+      "properties": {
+        "grant_hash": {
+          "$ref": "#/$defs/blake3"
+        },
+        "inquiry_hash": {
+          "$ref": "#/$defs/blake3"
+        },
+        "policy_hash": {
+          "$ref": "#/$defs/blake3"
+        },
+        "registry_snapshot_hash": {
+          "$ref": "#/$defs/blake3"
+        }
+      },
+      "required": [
+        "grant_hash",
+        "inquiry_hash",
+        "policy_hash",
+        "registry_snapshot_hash"
+      ],
+      "type": "object"
+    },
+    "planUniverse": {
+      "additionalProperties": false,
+      "properties": {
+        "grain": {
+          "type": "string"
+        },
+        "partitions": {
+          "items": {
+            "$ref": "#/$defs/universePartition"
+          },
+          "type": "array"
+        },
+        "rule": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "grain",
+        "partitions",
+        "rule"
+      ],
+      "type": "object"
+    },
+    "readOrdering": {
+      "additionalProperties": false,
+      "properties": {
+        "column": {
+          "type": "string"
+        },
+        "direction": {
+          "enum": [
+            "asc",
+            "desc"
+          ]
+        }
+      },
+      "required": [
+        "column",
+        "direction"
+      ],
+      "type": "object"
+    },
+    "readPredicate": {
+      "additionalProperties": false,
+      "properties": {
+        "column": {
+          "type": "string"
+        },
+        "op": {
+          "enum": [
+            "eq",
+            "gte",
+            "lte"
+          ]
+        },
+        "value": {
+          "$ref": "#/$defs/scalarValue"
+        }
+      },
+      "required": [
+        "column",
+        "op",
+        "value"
+      ],
+      "type": "object"
+    },
+    "retryPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "max_attempts": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "max_attempts"
+      ],
+      "type": "object"
+    },
+    "scalarValue": {
+      "oneOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "integer"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "universePartition": {
+      "additionalProperties": false,
+      "properties": {
+        "partition_id": {
+          "type": "string"
+        },
+        "predicate": {
+          "$ref": "#/$defs/readPredicate"
+        }
+      },
+      "required": [
+        "partition_id",
+        "predicate"
+      ],
+      "type": "object"
+    },
+    "warehouseReadSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "catalog_key": {
+          "type": "string"
+        },
+        "columns": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "distinct": {
+          "type": "boolean"
+        },
+        "normalization": {
+          "items": {
+            "$ref": "#/$defs/normalizationRule"
+          },
+          "type": "array"
+        },
+        "ordering": {
+          "items": {
+            "$ref": "#/$defs/readOrdering"
+          },
+          "type": "array"
+        },
+        "predicates": {
+          "items": {
+            "$ref": "#/$defs/readPredicate"
+          },
+          "type": "array"
+        },
+        "row_bound": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "catalog_key",
+        "columns",
+        "distinct",
+        "normalization",
+        "ordering",
+        "predicates",
+        "row_bound"
+      ],
+      "type": "object"
+    }
+  }
+}

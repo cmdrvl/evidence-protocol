@@ -85,6 +85,98 @@ impl fmt::Display for Blake3Hash {
     }
 }
 
+/// Protocol reference to an artifact envelope: `artifact:blake3:<64 lowercase hex>`.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct ArtifactRef(String);
+
+impl ArtifactRef {
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+}
+
+impl TryFrom<String> for ArtifactRef {
+    type Error = String;
+
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        if is_prefixed_blake3_ref(&value, "artifact:") {
+            Ok(Self(value))
+        } else {
+            Err("expected artifact:blake3:<64 lowercase hex>".to_string())
+        }
+    }
+}
+
+impl Serialize for ArtifactRef {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_str(&self.0)
+    }
+}
+
+impl<'de> Deserialize<'de> for ArtifactRef {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Self::try_from(String::deserialize(deserializer)?).map_err(serde::de::Error::custom)
+    }
+}
+
+impl fmt::Display for ArtifactRef {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.0)
+    }
+}
+
+/// Protocol reference to content-addressed payload bytes: `cas:blake3:<64 lowercase hex>`.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct CasRef(String);
+
+impl CasRef {
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+}
+
+impl TryFrom<String> for CasRef {
+    type Error = String;
+
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        if is_prefixed_blake3_ref(&value, "cas:") {
+            Ok(Self(value))
+        } else {
+            Err("expected cas:blake3:<64 lowercase hex>".to_string())
+        }
+    }
+}
+
+impl Serialize for CasRef {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_str(&self.0)
+    }
+}
+
+impl<'de> Deserialize<'de> for CasRef {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Self::try_from(String::deserialize(deserializer)?).map_err(serde::de::Error::custom)
+    }
+}
+
+impl fmt::Display for CasRef {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.0)
+    }
+}
+
 /// Opaque handle id. The broker resolves it to credentials outside the wire object.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct CapabilityHandleId(String);
@@ -143,6 +235,10 @@ fn is_blake3_hash(value: &str) -> bool {
         && hex
             .bytes()
             .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+}
+
+fn is_prefixed_blake3_ref(value: &str, prefix: &str) -> bool {
+    value.strip_prefix(prefix).is_some_and(is_blake3_hash)
 }
 
 fn is_capability_handle_id(value: &str) -> bool {

@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifact_id": {
+      "$ref": "#/$defs/artifactRef"
+    },
+    "as_of": {
+      "type": "string"
+    },
+    "byte_hash": {
+      "$ref": "#/$defs/blake3"
+    },
+    "derived_from": {
+      "items": {
+        "$ref": "#/$defs/artifactRef"
+      },
+      "type": "array"
+    },
+    "kind": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "media_type": {
+      "type": "string"
+    },
+    "observed_at": {
+      "type": "string"
+    },
+    "payload_ref": {
+      "$ref": "#/$defs/casRef"
+    },
+    "schema": {
+      "const": "artifact.v0"
+    },
+    "scope_ref": {
+      "$ref": "#/$defs/blake3"
+    },
+    "sensitivity": {
+      "enum": [
+        "public",
+        "test_restricted"
+      ]
+    }
+  },
+  "required": [
+    "artifact_id",
+    "as_of",
+    "byte_hash",
+    "derived_from",
+    "kind",
+    "media_type",
+    "observed_at",
+    "payload_ref",
+    "schema",
+    "scope_ref",
+    "sensitivity"
+  ],
+  "type": "object",
+  "$defs": {
+    "artifactRef": {
+      "pattern": "^artifact:blake3:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "blake3": {
+      "pattern": "^blake3:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "casRef": {
+      "pattern": "^cas:blake3:[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

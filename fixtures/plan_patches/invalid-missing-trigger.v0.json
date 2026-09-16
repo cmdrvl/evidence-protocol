@@ -1,0 +1,1 @@
+{"added_nodes":[],"authority_delta":{"connectors":[],"mutations":[]},"budget_delta":{"bytes":0,"cost_units":0,"human_reviews":0,"model_tokens":0,"source_calls":0},"compiler_rule":"missing_trigger_is_invalid","retired_node_ids":[],"schema":"plan_patch.v0"}
