@@ -177,6 +177,52 @@ impl fmt::Display for CasRef {
     }
 }
 
+/// Protocol reference to a receipt envelope: `receipt:blake3:<64 lowercase hex>`.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct ReceiptRef(String);
+
+impl ReceiptRef {
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+}
+
+impl TryFrom<String> for ReceiptRef {
+    type Error = String;
+
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        if is_prefixed_blake3_ref(&value, "receipt:") {
+            Ok(Self(value))
+        } else {
+            Err("expected receipt:blake3:<64 lowercase hex>".to_string())
+        }
+    }
+}
+
+impl Serialize for ReceiptRef {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_str(&self.0)
+    }
+}
+
+impl<'de> Deserialize<'de> for ReceiptRef {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Self::try_from(String::deserialize(deserializer)?).map_err(serde::de::Error::custom)
+    }
+}
+
+impl fmt::Display for ReceiptRef {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.0)
+    }
+}
+
 /// Opaque handle id. The broker resolves it to credentials outside the wire object.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct CapabilityHandleId(String);

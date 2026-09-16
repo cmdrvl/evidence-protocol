@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "implementation_status": {
+            "const": "planned"
+          }
+        },
+        "required": [
+          "implementation_status"
+        ]
+      },
+      "then": {
+        "not": {
+          "required": [
+            "conformance_receipt"
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "implementation_status": {
+            "const": "shipped"
+          }
+        },
+        "required": [
+          "implementation_status"
+        ]
+      },
+      "then": {
+        "required": [
+          "conformance_receipt"
+        ]
+      }
+    }
+  ],
+  "properties": {
+    "channel_key": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "conformance_receipt": {
+      "$ref": "#/$defs/receiptRef"
+    },
+    "cost": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "cost_units": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "basis",
+        "cost_units"
+      ],
+      "type": "object"
+    },
+    "entity_grains": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "evidence_class": {
+      "enum": [
+        "corroboration",
+        "constraint",
+        "external_anchor",
+        "primary_observation"
+      ]
+    },
+    "evidences": {
+      "items": {
+        "$ref": "#/$defs/evidence"
+      },
+      "type": "array"
+    },
+    "implementation_status": {
+      "enum": [
+        "planned",
+        "shipped"
+      ]
+    },
+    "independence": {
+      "additionalProperties": false,
+      "properties": {
+        "upstream": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "upstream"
+      ],
+      "type": "object"
+    },
+    "license": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema": {
+      "const": "capability.v0"
+    },
+    "temporal_coverage": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "from": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "to": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "basis",
+        "from",
+        "to"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "channel_key",
+    "cost",
+    "entity_grains",
+    "evidence_class",
+    "evidences",
+    "independence",
+    "license",
+    "schema",
+    "temporal_coverage"
+  ],
+  "type": "object",
+  "$defs": {
+    "evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "predicate": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "to": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "from",
+        "predicate",
+        "to"
+      ],
+      "type": "object"
+    },
+    "receiptRef": {
+      "pattern": "^receipt:blake3:[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}
