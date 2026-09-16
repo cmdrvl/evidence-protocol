@@ -1,0 +1,21 @@
+[package]
+name = "evidence-protocol"
+version = "0.0.1"
+edition = "2024"
+license = "MIT"
+description = "Evidence Protocol: public wire contracts (inquiry, grant, artifact, plan, receipt, answer, capability .v0) for the CMD+RVL Evidence Machine. Types + JSON Schemas + fixtures. Minimal by design."
+repository = "https://github.com/cmdrvl/evidence-protocol"
+readme = "README.md"
+keywords = ["evidence", "protocol", "provenance", "cmdrvl"]
+categories = ["data-structures"]
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

@@ -1,0 +1,23 @@
+# cargo-deny configuration — the mechanical half of the Evidence Protocol
+# dependency boundary. Nothing public may depend on the private runtime, and
+# the protocol crate depends on nothing CMD+RVL at all.
+#
+#   cargo deny check bans sources
+
+[bans]
+multiple-versions = "warn"
+wildcards = "deny"
+deny = [
+  { name = "evidence-machine", reason = "private runtime; the protocol must never depend on it" },
+  { name = "spine-rules",      reason = "rules layer consumes the protocol, not the reverse" },
+]
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+# No git sources at all. In particular nothing under github.com/SaltIO/.
+allow-git = []
+
+[licenses]
+allow = ["MIT", "Apache-2.0", "Unicode-3.0"]
