@@ -1,0 +1,497 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "answers": {
+      "items": {
+        "$ref": "#/$defs/answerItem"
+      },
+      "type": "array"
+    },
+    "assumptions": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "budget": {
+      "additionalProperties": false,
+      "properties": {
+        "consumed": {
+          "$ref": "#/$defs/budget"
+        },
+        "remaining": {
+          "$ref": "#/$defs/budget"
+        }
+      },
+      "required": [
+        "consumed",
+        "remaining"
+      ],
+      "type": "object"
+    },
+    "closure_refs": {
+      "$ref": "#/$defs/closureRefs"
+    },
+    "coverage": {
+      "additionalProperties": false,
+      "properties": {
+        "breakdowns": {
+          "items": {
+            "$ref": "#/$defs/coverageBreakdown"
+          },
+          "type": "array"
+        },
+        "counts": {
+          "$ref": "#/$defs/coverageCounts"
+        },
+        "universe_grain": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "universe_ref": {
+          "$ref": "#/$defs/blake3Hash"
+        }
+      },
+      "required": [
+        "breakdowns",
+        "counts",
+        "universe_grain",
+        "universe_ref"
+      ],
+      "type": "object"
+    },
+    "human_review": {
+      "additionalProperties": false,
+      "properties": {
+        "adjudicated": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "promoted": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "queued": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "adjudicated",
+        "promoted",
+        "queued"
+      ],
+      "type": "object"
+    },
+    "policy_mappings": {
+      "items": {
+        "$ref": "#/$defs/policyMapping"
+      },
+      "type": "array"
+    },
+    "schema": {
+      "const": "answer.v0"
+    },
+    "source_summary": {
+      "additionalProperties": false,
+      "properties": {
+        "channels": {
+          "items": {
+            "$ref": "#/$defs/sourceSummaryEntry"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "channels"
+      ],
+      "type": "object"
+    },
+    "stopped_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "unknowns": {
+      "additionalProperties": false,
+      "properties": {
+        "evidentiary": {
+          "items": {
+            "$ref": "#/$defs/typedUnknown"
+          },
+          "type": "array"
+        },
+        "operational": {
+          "items": {
+            "$ref": "#/$defs/typedUnknown"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "evidentiary",
+        "operational"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "answers",
+    "assumptions",
+    "budget",
+    "closure_refs",
+    "coverage",
+    "human_review",
+    "policy_mappings",
+    "schema",
+    "source_summary",
+    "stopped_reason",
+    "unknowns"
+  ],
+  "type": "object",
+  "$defs": {
+    "answerItem": {
+      "additionalProperties": false,
+      "properties": {
+        "answer_class": {
+          "enum": [
+            "contradicted",
+            "conflicted",
+            "forced",
+            "indeterminate_evidence",
+            "indeterminate_operations",
+            "not_comparable",
+            "out_of_scope",
+            "supported_not_forced"
+          ]
+        },
+        "contradiction_refs": {
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "type": "array"
+        },
+        "feasible_alternative_refs": {
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "type": "array"
+        },
+        "subject_ref": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "support_refs": {
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "type": "array"
+        },
+        "value_ref": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/artifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "answer_class",
+        "contradiction_refs",
+        "feasible_alternative_refs",
+        "subject_ref",
+        "support_refs",
+        "value_ref"
+      ],
+      "type": "object"
+    },
+    "artifactRef": {
+      "pattern": "^artifact:blake3:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "blake3Hash": {
+      "pattern": "^blake3:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "budget": {
+      "additionalProperties": false,
+      "properties": {
+        "bytes": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "cost_units": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "human_reviews": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "model_tokens": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "source_calls": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "bytes",
+        "cost_units",
+        "human_reviews",
+        "model_tokens",
+        "source_calls"
+      ],
+      "type": "object"
+    },
+    "closureRefs": {
+      "additionalProperties": false,
+      "properties": {
+        "closure_root_hash": {
+          "$ref": "#/$defs/blake3Hash"
+        },
+        "declaration_hashes": {
+          "items": {
+            "$ref": "#/$defs/blake3Hash"
+          },
+          "type": "array"
+        },
+        "grant_hash": {
+          "$ref": "#/$defs/blake3Hash"
+        },
+        "inquiry_hash": {
+          "$ref": "#/$defs/blake3Hash"
+        },
+        "operator_snapshot_hash": {
+          "$ref": "#/$defs/blake3Hash"
+        },
+        "plan_hash": {
+          "$ref": "#/$defs/blake3Hash"
+        },
+        "policy_hash": {
+          "$ref": "#/$defs/blake3Hash"
+        },
+        "profile_hash": {
+          "$ref": "#/$defs/blake3Hash"
+        },
+        "registry_snapshot_hash": {
+          "$ref": "#/$defs/blake3Hash"
+        },
+        "run_ledger_hash": {
+          "$ref": "#/$defs/blake3Hash"
+        }
+      },
+      "required": [
+        "closure_root_hash",
+        "declaration_hashes",
+        "grant_hash",
+        "inquiry_hash",
+        "operator_snapshot_hash",
+        "plan_hash",
+        "policy_hash",
+        "profile_hash",
+        "registry_snapshot_hash",
+        "run_ledger_hash"
+      ],
+      "type": "object"
+    },
+    "coverageBreakdown": {
+      "additionalProperties": false,
+      "properties": {
+        "by": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "counts": {
+          "$ref": "#/$defs/coverageCounts"
+        },
+        "key": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "by",
+        "counts",
+        "key"
+      ],
+      "type": "object"
+    },
+    "coverageCounts": {
+      "additionalProperties": false,
+      "properties": {
+        "attempted": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "complete_empty": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "complete_positive": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "incomplete_authority": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "incomplete_budget": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "incomplete_evidence": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "incomplete_execution": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "incomplete_source": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "not_investigated": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "out_of_scope": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "total": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "attempted",
+        "complete_empty",
+        "complete_positive",
+        "incomplete_authority",
+        "incomplete_budget",
+        "incomplete_evidence",
+        "incomplete_execution",
+        "incomplete_source",
+        "not_investigated",
+        "out_of_scope",
+        "total"
+      ],
+      "type": "object"
+    },
+    "policyMapping": {
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "to": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "from",
+        "to"
+      ],
+      "type": "object"
+    },
+    "receiptRef": {
+      "pattern": "^receipt:blake3:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "sourceSummaryEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "artifacts": {
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "type": "array"
+        },
+        "channel_key": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "receipts": {
+          "items": {
+            "$ref": "#/$defs/receiptRef"
+          },
+          "type": "array"
+        },
+        "source_class": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifacts",
+        "channel_key",
+        "receipts",
+        "source_class"
+      ],
+      "type": "object"
+    },
+    "typedUnknown": {
+      "additionalProperties": false,
+      "properties": {
+        "can_change_answer": {
+          "type": "boolean"
+        },
+        "class": {
+          "enum": [
+            "authority_missing",
+            "budget_exhausted",
+            "candidate_reach_unproven",
+            "evidence_conflicted",
+            "evidence_missing",
+            "execution_failed",
+            "human_judgment_required",
+            "key_family_uncovered",
+            "not_investigated",
+            "operator_refused",
+            "privacy_boundary",
+            "promotion_blocked",
+            "source_unavailable",
+            "strategy_unresolved"
+          ]
+        },
+        "closing_action": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "description": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "scope_ref": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/artifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "can_change_answer",
+        "class",
+        "closing_action",
+        "description",
+        "scope_ref"
+      ],
+      "type": "object"
+    }
+  }
+}

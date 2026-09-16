@@ -5,11 +5,11 @@ their JSON Schemas, and fixtures. Defined once, here, so that the private
 runtime can implement them without redefining them and the rules layer can
 check conformance against them.
 
-Status: **v0.4.0 prepared for coordinator review.** `inquiry.v0`,
+Status: **v0.5.0 prepared for coordinator review.** `inquiry.v0`,
 `grant.v0`, `artifact.v0`, `plan.v0`, `plan_patch.v0`, `capability.v0`,
-`receipt.v0`, and `run.v0` now carry the Milestone 1 consumer-backed fields,
-schemas, and fixtures. Remaining contract fields land only as their consumers
-land.
+`receipt.v0`, `run.v0`, and `answer.v0` now carry the Milestone 1
+consumer-backed fields, schemas, and fixtures. Remaining contract fields land
+only as their consumers land.
 
 ## The three-layer split
 
@@ -64,7 +64,7 @@ historical instrument identity closure over N-PORT-P holdings.
 
 ```toml
 [dependencies]
-evidence-protocol = { git = "https://github.com/cmdrvl/evidence-protocol", tag = "v0.4.0" }
+evidence-protocol = { git = "https://github.com/cmdrvl/evidence-protocol", tag = "v0.5.0" }
 ```
 
 ```rust
