@@ -66,14 +66,15 @@ fn run_receipt_ref_is_bound_to_the_node_receipt_fixture_hash() {
         blake3::hash(&canonical_bytes(&receipt)).to_hex()
     );
 
-    let receipt_hash = match &run.events[0] {
-        RunEvent::Receipt { receipt_hash, .. } => receipt_hash.as_str(),
-        _ => panic!("first run event must be a receipt"),
-    };
+    let receipt_hash = run.events.first().and_then(|event| match event {
+        RunEvent::Receipt { receipt_hash, .. } => Some(receipt_hash.as_str()),
+        _ => None,
+    });
 
     assert_eq!(
-        receipt_hash, expected,
-        "run fixture receipt_hash must be {expected}"
+        receipt_hash,
+        Some(expected.as_str()),
+        "first run event must be a receipt bound to {expected}"
     );
 }
 
