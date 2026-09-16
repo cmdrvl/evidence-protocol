@@ -13,4 +13,5 @@ pub mod capability;
 pub mod grant;
 pub mod inquiry;
 pub mod plan;
+pub mod primitives;
 pub mod receipt;

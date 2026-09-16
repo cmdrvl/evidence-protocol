@@ -1,6 +1,6 @@
 [package]
 name = "evidence-protocol"
-version = "0.0.1"
+version = "0.1.0"
 edition = "2024"
 license = "MIT"
 description = "Evidence Protocol: public wire contracts (inquiry, grant, artifact, plan, receipt, answer, capability .v0) for the CMD+RVL Evidence Machine. Types + JSON Schemas + fixtures. Minimal by design."
@@ -12,6 +12,10 @@ categories = ["data-structures"]
 [dependencies]
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+
+[dev-dependencies]
+blake3 = "1.8.7"
+jsonschema = { version = "0.56.0", default-features = false }
 
 [profile.release]
 opt-level = "z"

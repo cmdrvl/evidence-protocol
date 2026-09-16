@@ -2,6 +2,17 @@
 
 > Guidelines for AI coding agents working in this Rust crate.
 
+## NTM implementation waves
+
+Workers deliver public contracts and meaningful positive and negative tests
+together. The coordinator serializes repository verification and alone closes
+beads with commands, results, and the verified revision. Keep review-ready work
+`in_progress` with a `batch-pending` label; do not invent unsupported tracker
+statuses. Required quality gates still apply before commits and pushes. Share
+passing evidence instead of duplicating expensive concurrent builds. Never
+weaken acceptance, treat fixtures as live proof, or credit documents and commits
+as completed capabilities. Preserve frozen denominators and report residuals.
+
 ---
 
 ## What This Crate Is

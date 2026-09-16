@@ -5,8 +5,9 @@ their JSON Schemas, and fixtures. Defined once, here, so that the private
 runtime can implement them without redefining them and the rules layer can
 check conformance against them.
 
-Status: **v0 bootstrap.** Contract identifiers and intent are fixed. Fields
-are fixed only as each consumer lands. Nothing here is stable yet.
+Status: **v0.1.0 prepared.** `inquiry.v0` and `grant.v0` now carry the
+Milestone 1 N-PORT identity-closure fields, schemas, and fixtures. Remaining
+contract fields land only as their consumers land.
 
 ## The three-layer split
 
@@ -61,11 +62,11 @@ historical instrument identity closure over N-PORT-P holdings.
 
 ```toml
 [dependencies]
-evidence-protocol = { git = "https://github.com/cmdrvl/evidence-protocol", tag = "v0.0.1" }
+evidence-protocol = { git = "https://github.com/cmdrvl/evidence-protocol", tag = "v0.1.0" }
 ```
 
 ```rust
-use evidence_protocol::{CONTRACTS, v0};
+use evidence_protocol::{v0, CONTRACTS};
 assert!(CONTRACTS.contains(&v0::inquiry::SCHEMA));
 ```
 
