@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "events": {
+      "items": {
+        "$ref": "#/$defs/runEvent"
+      },
+      "type": "array"
+    },
+    "plan_hash": {
+      "$ref": "#/$defs/blake3"
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema": {
+      "const": "run.v0"
+    }
+  },
+  "required": [
+    "events",
+    "plan_hash",
+    "run_id",
+    "schema"
+  ],
+  "type": "object",
+  "$defs": {
+    "blake3": {
+      "pattern": "^blake3:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "maybeBlake3": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/blake3"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "receiptRef": {
+      "pattern": "^receipt:blake3:[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "runEvent": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "entry_hash": {
+              "$ref": "#/$defs/blake3"
+            },
+            "event": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "kind": {
+              "const": "control"
+            },
+            "observed_at": {
+              "type": "string"
+            },
+            "previous_entry_hash": {
+              "$ref": "#/$defs/maybeBlake3"
+            },
+            "sequence": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "entry_hash",
+            "event",
+            "kind",
+            "observed_at",
+            "previous_entry_hash",
+            "sequence"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "entry_hash": {
+              "$ref": "#/$defs/blake3"
+            },
+            "kind": {
+              "const": "plan_patch"
+            },
+            "plan_patch_hash": {
+              "$ref": "#/$defs/blake3"
+            },
+            "previous_entry_hash": {
+              "$ref": "#/$defs/maybeBlake3"
+            },
+            "sequence": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "entry_hash",
+            "kind",
+            "plan_patch_hash",
+            "previous_entry_hash",
+            "sequence"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "entry_hash": {
+              "$ref": "#/$defs/blake3"
+            },
+            "kind": {
+              "const": "receipt"
+            },
+            "previous_entry_hash": {
+              "$ref": "#/$defs/maybeBlake3"
+            },
+            "receipt_hash": {
+              "$ref": "#/$defs/receiptRef"
+            },
+            "sequence": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "entry_hash",
+            "kind",
+            "previous_entry_hash",
+            "receipt_hash",
+            "sequence"
+          ],
+          "type": "object"
+        }
+      ]
+    }
+  }
+}

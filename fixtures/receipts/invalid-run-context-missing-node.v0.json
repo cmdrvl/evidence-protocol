@@ -1,0 +1,1 @@
+{"artifacts":[],"claim_state":"unresolved","code":"E_READ_SPEC_INVALID","context":{"kind":"node","run_id":"run:nport_identity_closure:fixture"},"coverage":"unattempted","domain_disposition":"refusal","execution":"ok","message":"node receipt context has a run id but no node id","observed_at":"2026-09-16T00:00:00Z","schema":"receipt.v0"}
