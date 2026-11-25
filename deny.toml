@@ -16,7 +16,7 @@ deny = [
 unknown-registry = "deny"
 unknown-git = "deny"
 allow-registry = ["https://github.com/rust-lang/crates.io-index"]
-# No git sources at all. In particular nothing under github.com/SaltIO/.
+# No git sources at all; all dependencies must come from crates.io.
 allow-git = []
 
 [licenses]

@@ -21,14 +21,14 @@ The public wire contracts of the CMD+RVL Evidence Machine: `inquiry`,
 `grant`, `artifact`, `plan` (+`plan_patch`), `receipt`/`run`, `answer`, and
 `capability`, all `.v0`. Serde types, JSON Schemas, fixtures. Nothing else.
 
-It is consumed by `SaltIO/evidence-machine` (private runtime) and
+It is consumed by the private Evidence Machine runtime and
 `cmdrvl/spine-rules` (conformance). It consumes nothing from CMD+RVL.
 
 ### Source of Truth
 
-- **Design intent:** `cmdrvl-context/docs/02-architecture/evidence-machine.md`
-  §4 (contracts) and §2 "Protocol origination and boundary rules".
-- **What lands first:** `SaltIO/evidence-machine/docs/MILESTONE_1.md`.
+- **Design intent:** The Evidence Machine architecture specification
+  (contracts and protocol origination / boundary rules).
+- **What lands first:** Consumer-backed v0 milestone contracts.
 - **Addition rule and canonical JSON:** [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
 ---
@@ -119,5 +119,5 @@ Every bead that adds a contract or field names its consumer.
 1. Quality gate green (fmt, clippy, test, deny).
 2. `br sync --flush-only`; commit `.beads/` with your change.
 3. Push. Work is not complete until `git push` succeeds.
-4. If you changed a contract's intent, note it for re-sync into
-   `cmdrvl-context` (canon wins).
+4. If you changed a contract's intent, note it for re-sync into the
+   canonical architecture specification.

@@ -5,8 +5,8 @@ This crate is deliberately small. Two rules keep it that way.
 ## 1. A contract is added only with a named consumer
 
 Every new contract, and every new field on an existing contract, arrives in a
-change that names the consuming code: a bead or PR in `SaltIO/evidence-machine`
-(or another named consumer) that will read or write the field. No speculative
+change that names the consuming code: a bead or PR in the Evidence Machine
+runtime (or another named consumer) that will read or write the field. No speculative
 fields. No "we will probably need". If the consumer is not written yet, the
 field is not either.
 
